@@ -46,6 +46,7 @@ public class EnemyAttack : MonoBehaviour {
         {
             _animator.SetBool("IsNearPlayer", false);
         }
+        print("exit trigger with _player");
     }
 
     void Attack()
