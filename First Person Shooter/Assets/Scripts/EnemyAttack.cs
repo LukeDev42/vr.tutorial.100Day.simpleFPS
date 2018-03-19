@@ -1,14 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemyAttack : MonoBehaviour {
-    Animator _animator;
-    GameObject _player;
+
+    public FistCollider LeftFist;
+    public FistCollider RightFist;
+
+    private Animator _animator;
+    private GameObject _player;
+    private NavMeshAgent _nav;
     private bool _collidedWithPlayer;
 
     private void Awake()
     {
+        _nav = GetComponent<NavMeshAgent>();
         _player = GameObject.FindGameObjectWithTag("Player");
         _animator = GetComponent<Animator>();
     }
@@ -18,26 +25,9 @@ public class EnemyAttack : MonoBehaviour {
         if (other.gameObject == _player)
         {
             _animator.SetBool("IsNearPlayer", true);
+            _nav.enabled = false;
         }
         print("enter trigger with _player");
-    }
-
-    private void OnCollisionEnter(Collision other)
-    {
-        if(other.gameObject == _player)
-        {
-            _collidedWithPlayer = true;
-        }
-        print("enter collided with _player");
-    }
-
-    private void OnCollisionExit(Collision collision)
-    {
-        if (collision.gameObject == _player)
-        {
-            _collidedWithPlayer = false;
-        }
-        print("exit collided with _player");
     }
 
     private void OnTriggerExit(Collider other)
@@ -45,15 +35,17 @@ public class EnemyAttack : MonoBehaviour {
         if (other.gameObject == _player)
         {
             _animator.SetBool("IsNearPlayer", false);
+            _nav.enabled = true;
         }
         print("exit trigger with _player");
     }
 
     void Attack()
     {
-        if(_collidedWithPlayer)
+        if (LeftFist.IsCollidingWithPlayer() || RightFist.IsCollidingWithPlayer())
         {
             print("player has been hit");
+            _player.GetComponent<PlayerHealth>().TakeDamage(10);
         }
     }
 }

@@ -4,18 +4,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemyMovement : MonoBehaviour {
+public class EnemyMovement : MonoBehaviour
+{
 
     public float KnockBackForce = 1.1f;
     public AudioClip[] WalkingClips;
     public float WalkingDelay = 0.4f;
 
-    private Animator _animator;
     private NavMeshAgent _nav;
+    private Animator _animator;
     private Transform _player;
     private EnemyHealth _enemyHealth;
     private AudioSource audioSource;
     private float _time;
+    private bool _collidedWithPlayer;
 
     private void Start()
     {
@@ -33,7 +35,7 @@ public class EnemyMovement : MonoBehaviour {
         if (_enemyHealth.Health > 0)
         {
             _nav.SetDestination(_player.position);
-            if(_time>WalkingDelay && _animator.GetCurrentAnimatorStateInfo(0).IsName("Unarmed-Run-Forward"))
+            if (_time > WalkingDelay && _animator.GetCurrentAnimatorStateInfo(0).IsName("Unarmed-Run-Forward"))
             {
                 PlayRandomFootstep();
                 Debug.Log("Footstep played");
@@ -63,4 +65,6 @@ public class EnemyMovement : MonoBehaviour {
         audioSource = gameObject.AddComponent<AudioSource>();
         audioSource.volume = 0.2f;
     }
+
+
 }

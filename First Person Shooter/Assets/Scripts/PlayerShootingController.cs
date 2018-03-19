@@ -8,15 +8,26 @@ public class PlayerShootingController : MonoBehaviour
     public float Range = 100;
     public float shootingDelay = 0.1f;
     public AudioClip ShotSfxClips;
+    public GameObject bullet;
+    public Transform bulletSpawn;
+    public float MaxAmmo = 10f;
 
-    private Camera _camera;
-    private ParticleSystem _particle;
-    private LayerMask _shootableMask;
+    static public LayerMask _shootableMask;
+    static public Camera _camera;
+
+    private ParticleSystem _particle;    
     private float timer;
     private AudioSource audioSource;
     private Animator animator;
     private bool isShooting;
     private bool isReloading;
+    private float currentAmmo;
+    private ScreenManager screenManager;
+
+    private void Awake()
+    {
+        SetupSound();
+    }
 
     private void Start()
     {
@@ -29,12 +40,18 @@ public class PlayerShootingController : MonoBehaviour
         animator = GetComponent<Animator>();
         isShooting = false;
         isReloading = false;
+        currentAmmo = MaxAmmo;
+        screenManager = GameObject.FindWithTag("ScreenManager").GetComponent<ScreenManager>();
     }
 
     private void Update()
     {
         timer += Time.deltaTime;
-        if (Input.GetMouseButton(0) && timer >= shootingDelay && !isReloading)
+
+        Vector3 lineOrigin = _camera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f));
+        Debug.DrawRay(lineOrigin, _camera.transform.forward * Range, Color.green);
+
+        if (Input.GetMouseButton(0) && timer >= shootingDelay && !isReloading && currentAmmo > 0)
         {
             Shoot();
             if(!isShooting)
@@ -42,7 +59,7 @@ public class PlayerShootingController : MonoBehaviour
                 TriggerShootingAnimation();
             }
         }
-        else if(!Input.GetMouseButton(0))
+        else if(!Input.GetMouseButton(0) || currentAmmo <= 0)
         {
             StopShooting();
             if (isShooting)
@@ -83,7 +100,12 @@ public class PlayerShootingController : MonoBehaviour
         Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit = new RaycastHit();
         audioSource.Play();
-            _particle.Play();
+        _particle.Play();
+        Instantiate(bullet, bulletSpawn.position, bulletSpawn.rotation);
+        currentAmmo--;
+        screenManager.UpdateAmmoText(currentAmmo, MaxAmmo);
+
+
         if (Physics.Raycast(ray, out hit, Range, _shootableMask))
         {
             print("hit " + hit.collider.gameObject);
@@ -106,6 +128,8 @@ public class PlayerShootingController : MonoBehaviour
     public void ReloadFinish()
     {
         isReloading = false;
+        currentAmmo = MaxAmmo;
+        screenManager.UpdateAmmoText(currentAmmo, MaxAmmo);
     }
 
     private void SetupSound()

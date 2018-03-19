@@ -8,12 +8,14 @@ public class EnemyHealth : MonoBehaviour {
     public AudioClip[] HitSfxClips;
     public float HitSoundDelay = 0.5f;
 
+    private EnemyManager _spawnManager;
     private Animator animator;
     private AudioSource audioSource;
     private float hitTime;
 
     private void Start()
     {
+        _spawnManager = GameObject.FindGameObjectWithTag("SpawnManager").GetComponent<EnemyManager>();
         animator = GetComponent<Animator>();
         hitTime = 0f;
         SetupSound();
@@ -58,5 +60,6 @@ public class EnemyHealth : MonoBehaviour {
     private void Death()
     {
         animator.SetTrigger("Death");
+        _spawnManager.EnemyDefeated();
     }
 }
