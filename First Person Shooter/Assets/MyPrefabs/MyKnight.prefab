@@ -2306,7 +2306,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f0b72e585703574996137ccda588050, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Health: 10
+  Health: 100
   HitSfxClips:
   - {fileID: 8300000, guid: 05ecdd2cb484d1b48a1a0c8b6d712488, type: 3}
   - {fileID: 8300000, guid: c67bb4c35c76b0c448cb640580c1df00, type: 3}

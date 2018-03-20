@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour {
 
     public Animator GameOverAnimator;
+    public Animator VictoryAnimator;
 
     private GameObject _player;
     private bool restart;
@@ -27,9 +28,20 @@ public class GameManager : MonoBehaviour {
         }
     }
 
+    public void Victory()
+    {
+        VictoryAnimator.SetBool("IsGameOver", true);
+        DisableGame();
+    }
+
     public void GameOver()
     {
         GameOverAnimator.SetBool("IsGameOver", true);
+        DisableGame();
+    }
+
+    private void DisableGame()
+    {
         _player.GetComponent<PlayerController>().enabled = false;
         _player.GetComponentInChildren<MouseCameraController>().enabled = false;
         _player.GetComponentInChildren<PlayerShootingController>().enabled = false;

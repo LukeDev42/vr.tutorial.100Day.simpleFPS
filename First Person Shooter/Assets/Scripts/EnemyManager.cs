@@ -16,6 +16,8 @@ public class EnemyManager : MonoBehaviour {
     public Transform[] SpawnPoints;
     public float TimeBetweenEnemies = 2f;
 
+    private GameManager _gameManager;
+
     private int _totalEnemiesInCurrentWave;
     private int _enemiesInWaveLeft;
     private int _spawnedEnemies;
@@ -25,6 +27,8 @@ public class EnemyManager : MonoBehaviour {
 
     private void Start()
     {
+        _gameManager = GetComponentInParent<GameManager>();
+
         _currentWave = -1;
         _totalWaves = Waves.Length - 1;
 
@@ -34,9 +38,13 @@ public class EnemyManager : MonoBehaviour {
     void StartNextWave()
     {
         _currentWave++;
+
+        Debug.Log("Current Wave: " + _currentWave);
+        Debug.Log("Total Waves: " + _totalWaves);
         
         if(_currentWave > _totalWaves)
         {
+            _gameManager.Victory();
             return;
         }
 

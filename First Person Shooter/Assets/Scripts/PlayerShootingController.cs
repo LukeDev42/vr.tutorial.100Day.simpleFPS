@@ -119,7 +119,7 @@ public class PlayerShootingController : MonoBehaviour
             }
             if (health != null)
             {
-                health.TakeDamage(1);
+                health.TakeDamage(5);
             }
 
         }

@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BulletMover : PlayerShootingController {
+public class BulletMover : MonoBehaviour {
 
     public float speed;
+    public GameObject bullet;
 
     private Rigidbody bulletRB;
 
